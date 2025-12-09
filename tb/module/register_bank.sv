@@ -13,20 +13,19 @@ module Reg_Bank (
 
     //arreglo de memoria dinamica 
     logic [31:0] mem [31:0];
+    int i;
 
     //logica de escritura
     int i;                                          // variable de control para el for
     always_ff @(posedge clk) begin                  // en el flanco de subida del reloj
-        if (rst) for (i = 0; i<32; i++) mem[i] = 0; //reset a 0, inicializa el banco de registros, 
-        else if (A3 == 0) mem[0] <= 32'b0;         //si A3 es 0, el registro 0 se mantiene en 0
-        else if (WE3 && (A3 != 0)) begin            //si WE3 es alto y A3 no es 0, se escribe en el registro A3
-            mem[A3] <= WD3;                        //escribe el valor de WD3 en el registro A3
+        if (rst) begin 
+            for (i = 0; i<32; i++) 
+            mem[i] <= 32'b0;                        //reset a 0, inicializa el banco de registros, 
         end
-        else if (WE3) mem[A3] <= WD3;               //si WE3 es alto, se escribe en el registro A3
-        else mem[A3] <= mem[A3];                   //si no se cumple ninguna de las anteriores, el registro A3 se mantiene igual
-    end
-
-    //la logica de LECTURA (salida) del BANCO es combinacional
+        else if (WE3 && (A3 != 0)) begin      //si WE3 es alto y A3 es 0, se escribe en el registro 0
+            mem[A3] <= WD3;                        //escribe el valor de WD3 en el registro 0
+        end
+    end 
     assign RD1 = (A1 == 0) ? 32'b0 : mem[A1];       //si A1 es 0, RD1 es 0, si no, RD1 es el valor del registro A1
     assign RD2 = (A2 == 0) ? 32'b0 : mem[A2];       //si A2 es 0, RD2 es 0, si no, RD2 es el valor del registro A2
 endmodule

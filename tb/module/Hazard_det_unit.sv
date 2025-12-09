@@ -15,12 +15,14 @@ module hazard_unit (
     assign lwStall = (ResultSrcE == 2'b01) && 
                      ((RdE != 0) && ((RdE == Rs1D) || (RdE == Rs2D)));
 
-    // Stall por dependencia con lw
-    assign StallF = lwStall;
-    assign StallD = lwStall;
-    // Flush por lw hazard o por branch/jump efectivo
-    assign FlushE = lwStall || PCSrcE;
-    // Flush del registro IF/ID solo si hay branch/jump efectivo
+    //Si PCSrcE = 1, No stall (saltos No se estancan)
+    assisg StallF = (PCSrcE) ? 0: lwStall;
+    assisg StallD = (PCSrcE) ? 0: lwStall;
+
+    //Flush del If/ID solo por salto
     assign FlushD = PCSrcE;
 
-endmodule
+    //Flush del ID/EX tambien por salto
+    assign FlushE = PCSrcE || lwStall;
+
+endmodule 

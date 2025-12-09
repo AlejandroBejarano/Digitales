@@ -1,5 +1,4 @@
 
-
 module mux31 #(
     parameter N = 32
 )(

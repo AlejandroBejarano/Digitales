@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #Programa 3 Algoritmo del Máximo Común Divisor
 
 addi a0, zero, 48
@@ -128,3 +129,30 @@ fill_loop:
     jal x0, fill_loop         # loop
 
     # (Esto se repetirá hasta completar 256 instrucciones)
+=======
+00500093
+00300113
+002081b3
+40218233
+00302023
+000002283
+fff08093
+00008463
+ff9ff06f
+0000006f
+
+
+
+
+10000113
+00500193
+00000513
+004000ef
+00020a23
+00012403
+00450533
+00410113
+fff18193
+fe319ee3
+00008067
+>>>>>>> 722e8d2 (Arreglo del instrution memori y en el Hazard_det_unit)
