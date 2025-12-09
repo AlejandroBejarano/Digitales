@@ -4,7 +4,7 @@ module data_memory #(
     parameter MEM_SIZE   = 256
 )(
     input  logic                  clk,
-    input  logic                  reset,          //Sincrono se limpia la emoria en el flanco 1
+    input  logic                  reset,          //Sincrono se limpia la memoria en el flanco 1
     input  logic                  WE,             // Señal de escritura (MemWriteM)
     input  logic [ADDR_WIDTH-1:0] A,              // Dirección de acceso
     input  logic [DATA_WIDTH-1:0] WD,             // Dato a escribir
@@ -30,7 +30,7 @@ module data_memory #(
         end
     end
     // Lectura asíncrona por palabra
-    assign RD = mem
+    assign RD = mem [A[9:2]];
 
 endmodule 
 
