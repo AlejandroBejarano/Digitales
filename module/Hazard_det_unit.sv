@@ -16,8 +16,8 @@ module hazard_unit (
                      ((RdE != 0) && ((RdE == Rs1D) || (RdE == Rs2D)));
 
     //Si PCSrcE = 1, No stall (saltos No se estancan)
-    assisg StallF = (PCSrcE) ? 0: lwStall;
-    assisg StallD = (PCSrcE) ? 0: lwStall;
+    assign StallF = (PCSrcE) ? 0: lwStall;
+    assign StallD = (PCSrcE) ? 0: lwStall;
 
     //Flush del If/ID solo por salto
     assign FlushD = PCSrcE;

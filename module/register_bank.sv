@@ -16,7 +16,6 @@ module Reg_Bank (
     int i;
 
     //logica de escritura
-    int i;                                          // variable de control para el for
     always_ff @(posedge clk) begin                  // en el flanco de subida del reloj
         if (rst) begin 
             for (i = 0; i<32; i++) 
