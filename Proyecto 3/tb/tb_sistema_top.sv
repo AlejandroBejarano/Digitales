@@ -52,14 +52,13 @@ module tb_jerarquia_simple;
         end
     endtask // <<-- ¡AQUÍ ESTÁ LA CORRECCIÓN!
     
-    // TAREA CORREGIDA: Se evita el uso de 'logic' en la declaración de puertos (compatibilidad iverilog)
-    task request_cpu(
-        input  [ADDR_W-1:0] addr,
-        input  [DATA_W-1:0] wdata,
-        input               we,
-        output [DATA_W-1:0] rdata,
-        output              hit
-    );
+    // TAREA CORREGIDA: Se añade 'endtask'
+    task request_cpu;
+        input [ADDR_W-1:0] addr;
+        input [DATA_W-1:0] wdata;
+        input logic        we;
+        output [DATA_W-1:0] rdata;
+        output logic        hit;
         begin
             $display("T=%0t | Peticion: %s en 0x%h", $time, we ? "ESCRITURA" : "LECTURA", addr);
             cpu_addr = addr;
@@ -107,7 +106,7 @@ module tb_jerarquia_simple;
         wait_cycles(2);
 
         // ----------------------------------------------------
-        // 2. LECTURA: Cache Hit (Misma direccion)
+        // 2. LECTURA: Cache Hit (Misma dirección)
         // Valor esperado: Rápido y Hit=1
         // ----------------------------------------------------
         $display("\n[ESCENARIO 2: CACHE HIT]");
@@ -161,4 +160,3 @@ module tb_jerarquia_simple;
     end
 
 endmodule
-
