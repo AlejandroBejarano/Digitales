@@ -6,8 +6,6 @@ module forwarding_unit (
     output logic [1:0] ForwardAE,     // Selector para ALU input A
     output logic [1:0] ForwardBE      // Selector para ALU input B
 );
-
-    // Default: no reenvío
     always_comb begin
         ForwardAE = 2'b00;
         ForwardBE = 2'b00;

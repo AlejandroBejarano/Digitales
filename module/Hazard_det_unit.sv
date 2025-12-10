@@ -15,7 +15,7 @@ module hazard_unit (
     assign lwStall = (ResultSrcE == 2'b01) && 
                      ((RdE != 0) && ((RdE == Rs1D) || (RdE == Rs2D)));
 
-    //Si PCSrcE = 1, No stall (saltos No se estancan)
+    //Si PCSrcE = 1, No stall
     assign StallF = (PCSrcE) ? 0: lwStall;
     assign StallD = (PCSrcE) ? 0: lwStall;
 
