@@ -1,6 +1,5 @@
 module tb_register_id_ex;
 
-    // Entradas
     logic clk;
     logic reset;
     logic FlushE;
@@ -11,7 +10,7 @@ module tb_register_id_ex;
     logic [1:0] ResultSrcD;
     logic [2:0] ALUControlD;
 
-    // Salidas
+
     logic [31:0] PCE, PCPlus4E, RD1E, RD2E, ImmExtE;
     logic [4:0] Rs1E, Rs2E, RdE;
     logic RegWriteE, MemWriteE, JumpE, BranchE, ALUSrcE;
@@ -51,13 +50,11 @@ module tb_register_id_ex;
         .ALUSrcE(ALUSrcE)
     );
 
-    // Reloj de 10ns
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // Estímulos
     initial begin
-        // Inicialización
+
         reset = 1; FlushE = 0;
         PCD = 32'h00000000; PCPlus4D = 32'h00000004;
         RD1D = 32'h11111111; RD2D = 32'h22222222; ImmExtD = 32'h0000ABCD;
@@ -65,11 +62,10 @@ module tb_register_id_ex;
         RegWriteD = 0; ResultSrcD = 2'b00; MemWriteD = 0;
         JumpD = 0; BranchD = 0; ALUControlD = 3'b000; ALUSrcD = 0;
 
-        // Reset activo
+
         #12;
         reset = 0;
 
-        // Carga normal
         #10;
         PCD = 32'h10000000; PCPlus4D = 32'h10000004;
         RD1D = 32'hAAAA0001; RD2D = 32'hAAAA0002; ImmExtD = 32'h00001234;
@@ -77,7 +73,6 @@ module tb_register_id_ex;
         RegWriteD = 1; ResultSrcD = 2'b01; MemWriteD = 0;
         JumpD = 1; BranchD = 0; ALUControlD = 3'b011; ALUSrcD = 1;
 
-        // Cambia valores
         #10;
         PCD = 32'h10000004; PCPlus4D = 32'h10000008;
         RD1D = 32'hBBBB0001; RD2D = 32'hBBBB0002; ImmExtD = 32'h00005678;
@@ -85,14 +80,12 @@ module tb_register_id_ex;
         RegWriteD = 0; ResultSrcD = 2'b10; MemWriteD = 1;
         JumpD = 0; BranchD = 1; ALUControlD = 3'b110; ALUSrcD = 0;
 
-        // Flush
         #10;
         FlushE = 1;
 
         #10;
         FlushE = 0;
 
-        // Otra carga normal
         #10;
         PCD = 32'h20000000; PCPlus4D = 32'h20000004;
         RD1D = 32'hCCCC0001; RD2D = 32'hCCCC0002; ImmExtD = 32'h0000DCBA;
@@ -104,13 +97,11 @@ module tb_register_id_ex;
         $finish;
     end
 
-    // Monitor para consola
     initial begin
         $display("Time | reset | FlushE | PCD | PCPlus4D | RD1D | RD2D | ImmExtD | Rs1D | Rs2D | RdD | RegWriteD | ResultSrcD | MemWriteD | JumpD | BranchD | ALUControlD | ALUSrcD | ...");
         $monitor("%4t | %b | %b | %h | %h | %h | %h | %h | %d | %d | %d | %b | %b | %b | %b | %b | %b | %b | ...", $time, reset, FlushE, PCD, PCPlus4D, RD1D, RD2D, ImmExtD, Rs1D, Rs2D, RdD, RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcD);
     end
 
-    // Para archivo de ondas
     initial begin
         $dumpfile("tb_register_id_ex_waves.vcd");
         $dumpvars(0, tb_register_id_ex);

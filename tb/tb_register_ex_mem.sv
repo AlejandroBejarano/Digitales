@@ -1,6 +1,5 @@
 module tb_register_ex_mem;
 
-    // Entradas
     logic clk;
     logic reset;
 
@@ -9,7 +8,6 @@ module tb_register_ex_mem;
     logic        RegWriteE, MemWriteE;
     logic [1:0]  ResultSrcE;
 
-    // Salidas
     logic [31:0] ALUResultM, WriteDataM, PCPlus4M;
     logic [4:0]  RdM;
     logic        RegWriteM, MemWriteM;
@@ -36,13 +34,11 @@ module tb_register_ex_mem;
         .MemWriteM(MemWriteM)
     );
 
-    // Clock
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // Estímulos de prueba
     initial begin
-        // Valores iniciales
+
         reset = 1;
         ALUResultE = 32'h00000000;
         WriteDataE = 32'h00000000;
@@ -52,11 +48,9 @@ module tb_register_ex_mem;
         ResultSrcE = 2'b00;
         MemWriteE  = 0;
 
-        // Reset activo
         #12;
         reset = 0;
 
-        // Primer ciclo de avance
         #10;
         ALUResultE = 32'h11112222;
         WriteDataE = 32'h33334444;
@@ -66,7 +60,6 @@ module tb_register_ex_mem;
         ResultSrcE = 2'b01;
         MemWriteE  = 1;
 
-        // Segundo ciclo de avance
         #10;
         ALUResultE = 32'hAAAA0001;
         WriteDataE = 32'hBBBB0002;
@@ -76,13 +69,11 @@ module tb_register_ex_mem;
         ResultSrcE = 2'b10;
         MemWriteE  = 0;
 
-        // Reset otra vez
         #10;
         reset = 1;
         #10;
         reset = 0;
 
-        // Otro ciclo de avance
         #10;
         ALUResultE = 32'hDEADBEEF;
         WriteDataE = 32'hCAFEBABE;
@@ -96,14 +87,12 @@ module tb_register_ex_mem;
         $finish;
     end
 
-    // Monitor para consola
     initial begin
         $monitor("T=%0t | reset=%b | ALUResultE=%h | WriteDataE=%h | PCPlus4E=%h | RdE=%d | RegWriteE=%b | ResultSrcE=%b | MemWriteE=%b || ALUResultM=%h | WriteDataM=%h | PCPlus4M=%h | RdM=%d | RegWriteM=%b | ResultSrcM=%b | MemWriteM=%b",
             $time, reset, ALUResultE, WriteDataE, PCPlus4E, RdE, RegWriteE, ResultSrcE, MemWriteE,
             ALUResultM, WriteDataM, PCPlus4M, RdM, RegWriteM, ResultSrcM, MemWriteM);
     end
 
-    // Para archivo de ondas
     initial begin
         $dumpfile("tb_register_ex_mem_waves.vcd");
         $dumpvars(0, tb_register_ex_mem);

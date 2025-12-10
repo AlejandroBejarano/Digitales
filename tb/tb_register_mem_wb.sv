@@ -1,6 +1,5 @@
 module tb_register_mem_wb;
 
-    // Entradas
     logic clk;
     logic reset;
 
@@ -9,13 +8,11 @@ module tb_register_mem_wb;
     logic [31:0] ALUResultM, RD, PCPlus4M;
     logic [4:0]  RdM;
 
-    // Salidas
     logic        RegWriteW;
     logic [1:0]  ResultSrcW;
     logic [31:0] ALUResultW, ReadDataW, PCPlus4W;
     logic [4:0]  RdW;
 
-    // Instancia del DUT
     register_mem_wb dut (
         .clk(clk),
         .reset(reset),
@@ -33,13 +30,10 @@ module tb_register_mem_wb;
         .RdW(RdW)
     );
 
-    // Reloj de 10ns
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // Estímulos de prueba
     initial begin
-        // Inicialización
         reset = 1;
         RegWriteM = 0;
         ResultSrcM = 2'b00;
@@ -48,11 +42,9 @@ module tb_register_mem_wb;
         PCPlus4M = 32'h00000000;
         RdM = 5'd0;
 
-        // Reset activo
         #12;
         reset = 0;
 
-        // Primer ciclo de avance
         #10;
         RegWriteM = 1;
         ResultSrcM = 2'b01;
@@ -61,7 +53,6 @@ module tb_register_mem_wb;
         PCPlus4M = 32'hABCDEF12;
         RdM = 5'd10;
 
-        // Segundo ciclo de avance
         #10;
         RegWriteM = 0;
         ResultSrcM = 2'b10;
@@ -70,13 +61,11 @@ module tb_register_mem_wb;
         PCPlus4M = 32'h0000BEEF;
         RdM = 5'd15;
 
-        // Reset otra vez
         #10;
         reset = 1;
         #10;
         reset = 0;
 
-        // Otro ciclo de avance
         #10;
         RegWriteM = 1;
         ResultSrcM = 2'b11;
@@ -89,14 +78,12 @@ module tb_register_mem_wb;
         $finish;
     end
 
-    // Monitor para consola
     initial begin
         $monitor("T=%0t | reset=%b | RegWriteM=%b | ResultSrcM=%b | ALUResultM=%h | RD=%h | PCPlus4M=%h | RdM=%d || RegWriteW=%b | ResultSrcW=%b | ALUResultW=%h | ReadDataW=%h | PCPlus4W=%h | RdW=%d",
             $time, reset, RegWriteM, ResultSrcM, ALUResultM, RD, PCPlus4M, RdM,
             RegWriteW, ResultSrcW, ALUResultW, ReadDataW, PCPlus4W, RdW);
     end
 
-    // Para archivo de ondas
     initial begin
         $dumpfile("tb_register_mem_wb_waves.vcd");
         $dumpvars(0, tb_register_mem_wb);
