@@ -19,10 +19,6 @@ correo (Asunto: Presentación Proyecto 2). La entrega del código puede ser en u
 repositorio en github o en .zip al TEC Digital. 
 
 
-Usted desarrollará un procesador multiciclo con pipeline como el que muestra en la siguiente figura.
-
-![Mi imagen](Fotos/image.png)"Diagrama de bloques de un procesador multiciclo con pipeline basado en `rv32i`"
-
 Para este proyecto se utilizó como guía el siguiente diagrama de un procesador con pipeline.
 ## Diagrama del Pipelined
 ![display](Fotos/Diagrama_Pipelined.png)
