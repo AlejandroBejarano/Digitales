@@ -4,12 +4,12 @@ module main_memory
   parameter integer DATA_W  = 32,
   parameter integer LATENCY = 8
 )(
-  input  wire                 clk,
-  input  wire                 rst,
-  input  wire                 req,
-  input  wire                 we,
-  input  wire [ADDR_W-1:0]    addr,
-  input  wire [DATA_W-1:0]    wdata,
+  input  logic                 clk,
+  input  logic                 rst,
+  input  logic                 req,
+  input  logic                 we,
+  input  logic [ADDR_W-1:0]    addr,
+  input  logic [DATA_W-1:0]    wdata,
   output reg                  ready,
   output reg                  done,
   output reg  [DATA_W-1:0]    rdata
