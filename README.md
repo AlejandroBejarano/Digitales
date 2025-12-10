@@ -67,7 +67,9 @@ gtkwave sim/vcd/tb_forwarding_unit.vcd
 
 ### Cpu multiciclo
 ```
-iverilog -g2012 -o cpu_tb.vvp     tb/tb_cpu_multiciclo.sv     module/cpu_multiciclo.sv     module/control_unit.sv     module/datapath_mul.sv     module/Hazard_det_unit.sv     module/Forwarding_unit.sv     module/datapath_fetch_decode.sv     module/datapath_execute.sv     module/datapath_mem.sv     module/register_id_ex.sv     module/register_if_id.sv     module/register_mem_wb.sv     module/register_ex_mem.sv     module/pc.sv     module/instruction_memory.sv     module/data_memory.sv     module/ImmGen.sv     module/register_bank.sv     module/ALU.sv     module/adder.sv     module/mux21.sv     module/mux31.sv
+vcs -kdb -sverilog -lca -Mupdate -debug_all +vcs+flush+all +warn=all -timescale=1ns/10ps -full64 \
+-P ${VERDI_HOME}/share/PLI/VCS/linux64/novas.tab ${VERDI_HOME}/share/PLI/VCS/linux64/pli.a \
+-CFLAGS -DVCS module/*.sv tb/tb_cpu.sv 
 
 vvp cpu_tb.vvp
 
