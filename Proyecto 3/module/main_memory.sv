@@ -15,9 +15,14 @@ module main_memory
   output reg  [DATA_W-1:0]    rdata
 );
 
-  reg [DATA_W-1:0] mem [0:65535]; // 64K palabras (Ojo: enunciado pide 65KB total, esto es 256KB, pero válido para simulación)
+  reg [DATA_W-1:0] mem [0:65535]; // 64K palabras
   integer i;
   integer wait_cnt;
+
+  // Registros internos para "capturar" la transacción al inicio
+  reg [ADDR_W-1:0] saved_addr;
+  reg [DATA_W-1:0] saved_wdata;
+  reg              saved_we;
 
   initial begin
     for (i=0; i<65536; i=i+1) mem[i] = i[DATA_W-1:0];
@@ -29,17 +34,24 @@ module main_memory
       done     <= 1'b0;
       wait_cnt <= 0;
       rdata    <= {DATA_W{1'b0}};
+      saved_addr <= {ADDR_W{1'b0}};
+      saved_wdata <= {DATA_W{1'b0}};
+      saved_we <= 1'b0;
     end else begin
       done <= 1'b0;
       if (req && ready) begin
+        // Inicio de transacción: capturamos addr/we/wdata aquí
         ready    <= 1'b0;
         wait_cnt <= LATENCY;
+        saved_addr  <= addr;
+        saved_wdata <= wdata;
+        saved_we    <= we;
       end else if (!ready) begin
         if (wait_cnt==0) begin
           ready <= 1'b1;
           done  <= 1'b1;
-          if (we) mem[addr] <= wdata;
-          rdata <= mem[addr];
+          if (saved_we) mem[saved_addr] <= saved_wdata;
+          rdata <= mem[saved_addr];
         end else begin
           wait_cnt <= wait_cnt - 1;
         end
