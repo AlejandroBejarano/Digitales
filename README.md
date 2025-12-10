@@ -23,47 +23,11 @@ Usted desarrollará un procesador multiciclo con pipeline como el que muestra en
 
 ![Mi imagen](Fotos/image.png)"Diagrama de bloques de un procesador multiciclo con pipeline basado en `rv32i`"
 
-
-Usted deberá implementar las siguientes instrucciones del [_greencard_](https://tecdigital.tec.ac.cr/dotlrn/classes/E/EL3310/S-1-2025.CA.EL3310.2/file-storage/view/materiales%2Fgreencard.pdf):
-
-```asm
-lw
-sw
-sll, slli, srl, srli, sra, srai
-add, addi, sub
-xor, xori, or, ori, and, andi
-beq, bne, blt, bge
-slt, slti, sltu, sltui
-jal, jalr
-```
-
-
-
+Para este proyecto se utilizó como guía el siguiente diagrama de un procesador con pipeline.
 ## Diagrama del Pipelined
 ![display](Fotos/Diagrama_Pipelined.png)
 
-
 ## Codigos de consola
-
-### Hazard unit
-
-```
-iverilog -g2012 -o sim/hazard_testbench sim/tb_hazard_unit.sv src/Hazard_det_unit.sv
-
-vvp sim/hazard_testbench
-
-gtkwave sim/vcd/tb_hazard_unit.vcd
-```
-
-### Forwarding unit
-
-```
-iverilog -g2012 -o sim/forward_testbench sim/tb_forwarding_unit.sv src/Forwarding_unit.sv
-
-vvp sim/forward_testbench
-
-gtkwave sim/vcd/tb_forwarding_unit.vcd
-```
 
 ### Cpu multiciclo
 ```
@@ -71,7 +35,5 @@ vcs -kdb -sverilog -lca -Mupdate -debug_all +vcs+flush+all +warn=all -timescale=
 -P ${VERDI_HOME}/share/PLI/VCS/linux64/novas.tab ${VERDI_HOME}/share/PLI/VCS/linux64/pli.a \
 -CFLAGS -DVCS module/*.sv tb/tb_cpu.sv 
 
-vvp cpu_tb.vvp
-
-gtkwave cpu_multiciclo_tb.vcd
+./simv -gui
 ```
