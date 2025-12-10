@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------
 // File: instruction_memory_tb.sv
 // Descripción: Testbench para el módulo instruction_memory

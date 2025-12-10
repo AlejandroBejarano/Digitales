@@ -1,14 +1,17 @@
 `timescale 1ns/1ps
 
 module tb_pc();
+    parameter N = 32;
+
+    // señales
     logic clk;
     logic reset;
     logic StallF;
-    logic [31:0] pc_in;
-    logic [31:0] pc_out;
+    logic [N-1:0] pc_in;
+    logic [N-1:0] pc_out;
 
-    // Instancia del módulo bajo prueba
-    pc uut (
+    // instancia del DUT
+    pc #(.N(N)) uut (
         .clk(clk),
         .reset(reset),
         .StallF(StallF),
@@ -16,41 +19,60 @@ module tb_pc();
         .pc_out(pc_out)
     );
 
-    // Generador de reloj (periodo 10 ns)
-    initial begin
-        clk = 0;
-        forever #5 clk = ~clk;
-    end
+    // reloj: periodo 10 ns
+    initial clk = 0;
+    always #5 clk = ~clk;
 
-    // Generación de estímulos
     initial begin
-        $dumpfile("tb_pc.vcd");
+        // generar archivo de ondas
+        $dumpfile("pc_tb.vcd");
         $dumpvars(0, tb_pc);
-        
-        // Reset inicial
+
+        // inicializacion
         reset = 1;
         StallF = 0;
-        pc_in = 32'h0000_0000;
-        #10;
-        
-        // Caso 1: Actualización normal
+        pc_in = '0;
+
+        // mantener reset por 2 ciclos
+        repeat (2) @(posedge clk);
         reset = 0;
-        pc_in = 32'h0040_0000;
-        #10;
-        if (pc_out !== 32'h0040_0000) $error("Error Caso 1: pc_out debería ser 0x00400000");
-        
-        // Caso 2: Stall activo (no debe actualizarse)
+        $display("%0t: Reset desactivado", $time);
+
+        // primer valor de pc_in, sin stall -> pc_out debe seguir pc_in
+        pc_in = 32'h00000010;
+        StallF = 0;
+        @(posedge clk);
+        #1;
+        $display("%0t: pc_in=0x%08h, pc_out=0x%08h (esperado igual)", $time, pc_in, pc_out);
+        if (pc_out !== pc_in) $error("ERROR: pc_out no siguio a pc_in cuando StallF=0");
+
+        // probar stall: cambiar pc_in pero activar StallF -> pc_out debe quedarse en el valor anterior
+        pc_in = 32'h00000020;
         StallF = 1;
-        pc_in = 32'hDEAD_BEEF;
-        #10;
-        if (pc_out !== 32'h0040_0000) $error("Error Caso 2: pc_out no debería cambiar con StallF=1");
-        
-        // Caso 3: Reset asíncrono
-        reset = 1;
+        @(posedge clk);
+        #1;
+        $display("%0t: Stall activo, pc_in=0x%08h, pc_out=0x%08h (esperado sin cambio)", $time, pc_in, pc_out);
+        if (pc_out === 32'h00000020) $error("ERROR: pc_out cambió durante StallF=1");
+
+        // liberar stall: ahora pc_out debe actualizarse al nuevo pc_in
+        StallF = 0;
+        @(posedge clk);
+        #1;
+        $display("%0t: Stall liberado, pc_in=0x%08h, pc_out=0x%08h (esperado igual)", $time, pc_in, pc_out);
+        if (pc_out !== pc_in) $error("ERROR: pc_out no actualizó después de liberar StallF");
+
+        // probar reset asincrono: forzar reset y comprobar pc_out = 0
+        #3;
+        reset = 1; // posedge reset asynchronous trigger
+        @(posedge clk);
+        #1;
+        $display("%0t: Reset activado, pc_out=0x%08h (esperado 0)", $time, pc_out);
+        if (pc_out !== '0) $error("ERROR: pc_out no se puso a 0 tras reset");
+
+        // terminar
         #5;
-        if (pc_out !== 32'h0000_0000) $error("Error Caso 3: pc_out no se reseteó a 0");
-        
-        $display("¡Todos los tests pasaron!");
+        $display("Simulación finalizada correctamente.");
         $finish;
     end
+
 endmodule
