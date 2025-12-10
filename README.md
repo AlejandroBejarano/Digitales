@@ -43,6 +43,22 @@ jal, jalr
 ![display](Fotos/Diagrama_Pipelined.png)
 
 
+## Waveform
+![display](figs/Waveform%20cpu.png)
+
+![display](figs/Waveform%20cpu%20wb.png)
+
+```
+#Programa 1
+    addi x1, x0, 5        # x1 = 5
+    addi x2, x0, 3        # x2 = 3
+    add  x3, x1, x2       # x3 = x1 + x2 = 8
+    .
+    .
+    .
+```
+En las figuras se observa tanto en la ALU y etapa de wb en la salida del módulo de cpu, los valores de "salida" de las primeras instrucciones que se ejecutan.
+
 ## Codigos de consola
 
 ### Hazard unit
