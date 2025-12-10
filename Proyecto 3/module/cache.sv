@@ -5,20 +5,20 @@ module cache_storage
     parameter TAG_W = 6,
     parameter WORDS_PER_BLOCK = 8
 )(
-    input  logic               clk,
-    input  logic               rst,
+    input  wire               clk,
+    input  wire               rst,
     // Lectura / Escritura
-    input  logic [INDEX_W-1:0] index,       // "Line" en el diagrama
-    input  logic [2:0]         word_sel,    // "Word" en el diagrama
-    input  logic               we_data,     // Habilitador escritura de Datos
-    input  logic               we_tag,      // Habilitador escritura de Tag/Valid
-    input  logic [TAG_W-1:0]   tag_in,      // Tag a escribir
-    input  logic [DATA_W-1:0]  data_in,     // Dato a escribir
+    input  wire [INDEX_W-1:0] index,       // "Line" en el diagrama
+    input  wire [2:0]         word_sel,    // "Word" en el diagrama
+    input  wire               we_data,     // Habilitador escritura de Datos
+    input  wire               we_tag,      // Habilitador escritura de Tag/Valid
+    input  wire [TAG_W-1:0]   tag_in,      // Tag a escribir
+    input  wire [DATA_W-1:0]  data_in,     // Dato a escribir
     
     // Salidas
-    output logic [TAG_W-1:0]   tag_out,     // Tag leído
-    output logic               valid_out,   // Bit de validez
-    output logic [DATA_W-1:0]  data_out     // Dato leído
+    output wire [TAG_W-1:0]   tag_out,     // Tag leído
+    output wire               valid_out,   // Bit de validez
+    output wire [DATA_W-1:0]  data_out     // Dato leído
 );
 
     localparam LINES = (1 << INDEX_W);
