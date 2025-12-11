@@ -1,44 +1,33 @@
-# Proyecto 2: Implementación de un procesador multiciclo con pipeline basado en `rv32i`
+# Proyecto 3: Sistema de jerarquía de memoria entre una memoria principal y una memoria caché
 ### EL3310 - Diseño de Sistemas Digitales
 ### Escuela de Ingeniería Electrónica
 ### Tecnológico de Costa Rica
 
 <br/><br/>
 
-## Procesador multiciclo con pipeline
-Este proyecto consiste en construir un microprocesador en SystemVerilog. El procesador 
-debe tener las siguientes características:
-- Microprocesador multiciclo de 5 etapas con pipeline. 
-- Debe incluir unidad de detección de riesgos (Riesgos de Datos y Riegos de Control) 
-y unidad de adelantamiento. 
-- El procesador debe ser capaz de correr todas las instrucciones del estándar RV32I 
-(menos las FENCE, PAUSE, ECALL, EBREAK). 
-- Debe mostrar una simulación del procesador en SystemVerilog corriendo un 
-programa de su gusto. La presentación puede ser virtual o presencial, con cita al 
-correo (Asunto: Presentación Proyecto 2). La entrega del código puede ser en un 
-repositorio en github o en .zip al TEC Digital. 
+## Objetivos del sistema a desarrollar
+Este proyecto consiste en construir un sistema de jerarquía de memoria entre una memoria principal y una memoria caché, con las siguientes características:
+erarquía de memoria de dos niveles: la memoria caché y la memoria principal.
+• La memoria caché debe ser de 1024 Bytes de datos, mientras que la memoria principal debe ser de 65KiB. La memoria como un todo tendrá 16 bits de direcciones.
+• Los bloques de memoria deben ser de 256 bits, la palabra a leer/escribir es de 32 bits y la memoria se puede direccionar por byte.
+• La caché implementa mapeo directo.
+• Las escrituras pueden hacerse por Write-Through o Write-Back, a gusto de cada grupo.
+• La caché debe tener bit de válido (y bit de Dirty si usan Write-Back).
+• Debe mostrar una simulación del procesador en SystemVerilog probando caché hits y caché misses. 
 
 
-Para este proyecto se utilizó como guía el siguiente diagrama de un procesador con pipeline.
+Para este proyecto se utilizó como guía el siguiente diagrama:
 ## Diagrama del Pipelined
-![display](Fotos/Diagrama_Pipelined.png)
+![display](Fotos/Diagrama.png)
 
 
 ## Waveform
-![display](figs/Waveform%20cpu.png)
+![display](Fotos/Waveform%20memoria.png)
 
-![display](figs/Waveform%20cpu%20wb.png)
+## Consola
 
-```
-#Programa 1
-    addi x1, x0, 5        # x1 = 5
-    addi x2, x0, 3        # x2 = 3
-    add  x3, x1, x2       # x3 = x1 + x2 = 8
-    .
-    .
-    .
-```
-En las figuras se observa tanto en la ALU y etapa de wb en la salida del módulo de cpu, los valores de "salida" de las primeras instrucciones que se ejecutan. 
+![display](Fotos/Consola%201.png)
+
 
 ## Codigos de consola
 
@@ -46,7 +35,7 @@ En las figuras se observa tanto en la ALU y etapa de wb en la salida del módulo
 ```
 vcs -kdb -sverilog -lca -Mupdate -debug_all +vcs+flush+all +warn=all -timescale=1ns/10ps -full64 \
 -P ${VERDI_HOME}/share/PLI/VCS/linux64/novas.tab ${VERDI_HOME}/share/PLI/VCS/linux64/pli.a \
--CFLAGS -DVCS module/*.sv tb/tb_cpu.sv 
+-CFLAGS -DVCS module/*.sv tb/tb_sistema_top.sv 
 
 ./simv -gui
 ```
