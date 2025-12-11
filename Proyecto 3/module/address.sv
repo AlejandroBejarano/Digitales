@@ -1,4 +1,4 @@
-module addr_decoder
+module address
 #(
     parameter ADDR_W   = 16,
     parameter INDEX_W  = 5,
@@ -13,7 +13,7 @@ module addr_decoder
     // Mapeo según el diagrama: [ Tag | Line | Word/Byte ]
     assign tag      = addr[ADDR_W-1 : INDEX_W+OFFSET_W];
     assign index    = addr[INDEX_W+OFFSET_W-1 : OFFSET_W];
-    // Los bits [4:2] seleccionan la palabra (32 bits), los bits [1:0] son para byte (se ignoran para word align)
+    // Los bits [4:2] seleccionan la palabra (32 bits), los bits [1:0] son para byte
     assign word_sel = addr[4:2]; 
 
 endmodule

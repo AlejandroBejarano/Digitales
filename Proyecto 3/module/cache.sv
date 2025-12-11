@@ -1,4 +1,4 @@
-module cache_storage
+module cache
 #(
     parameter DATA_W = 32,
     parameter INDEX_W = 5,

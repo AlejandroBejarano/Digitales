@@ -1,4 +1,3 @@
-// Testbench para main_memory
 `timescale 1ns/1ps
 
 module tb_main_memory;

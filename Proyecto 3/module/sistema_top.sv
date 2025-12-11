@@ -23,7 +23,7 @@ module memory_system_top
   wire [4:0] index_cpu;
   wire [2:0] word_cpu;
   
-  addr_decoder decoder_inst (
+  address decoder_inst (
     .addr(cpu_addr),
     .tag(tag_cpu),
     .index(index_cpu),
@@ -59,7 +59,7 @@ module memory_system_top
   // ----------------------------------------------------
   // 4. Instanciación Cache Storage
   // ----------------------------------------------------
-  cache_storage cache_mem (
+  cache cache_mem (
     .clk(clk), .rst(rst),
     .index(index_cpu),       // Siempre usamos el índice de la CPU
     .word_sel(c_word_mux),   // Seleccionado por FSM (acceso normal o refill)

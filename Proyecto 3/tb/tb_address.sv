@@ -14,7 +14,7 @@ module tb_address;
     wire [2:0]        word_sel;
 
     // Instancia del módulo bajo prueba
-    addr_decoder #(
+    address #(
         .ADDR_W(ADDR_W),
         .INDEX_W(INDEX_W),
         .OFFSET_W(OFFSET_W)

@@ -15,7 +15,7 @@ module main_memory
   output reg  [DATA_W-1:0]    rdata
 );
 
-  reg [DATA_W-1:0] mem [0:65535]; // 64K palabras (Ojo: enunciado pide 65KB total, esto es 256KB, pero válido para simulación)
+  reg [DATA_W-1:0] mem [0:65535]; // 64K palabras
   integer i;
   integer wait_cnt;
 

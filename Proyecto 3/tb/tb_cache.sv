@@ -1,4 +1,3 @@
-// Testbench para cache_storage
 `timescale 1ns/1ps
 
 module tb_cache;
@@ -20,8 +19,7 @@ module tb_cache;
     wire valid_out;
     wire [DATA_W-1:0] data_out;
 
-    // Instancia del DUT
-    cache_storage #(
+    cache #(
         .DATA_W(DATA_W),
         .INDEX_W(INDEX_W),
         .TAG_W(TAG_W),
