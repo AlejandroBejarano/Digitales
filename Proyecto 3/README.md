@@ -37,7 +37,7 @@ El módulo main_memory modela el comportamiento de una Memoria de Acceso Aleator
 
 ![display](Fotos/Waveform%20main%20memory.png)
 
-## Waveform
+## Waveform sistema completo
 ![display](Fotos/Waveform%20memoria.png)
 
 ## Consola

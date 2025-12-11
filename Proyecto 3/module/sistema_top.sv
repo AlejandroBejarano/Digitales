@@ -16,9 +16,7 @@ module memory_system_top
   output reg  [DATA_W-1:0]  cpu_rdata
 );
 
-  // ----------------------------------------------------
-  // 1. Instanciación del Decodificador de Direcciones
-  // ----------------------------------------------------
+  // 1.Direcciones
   wire [5:0] tag_cpu;
   wire [4:0] index_cpu;
   wire [2:0] word_cpu;
@@ -30,9 +28,7 @@ module memory_system_top
     .word_sel(word_cpu)
   );
 
-  // ----------------------------------------------------
-  // 2. Cables y lógica interna
-  // ----------------------------------------------------
+
   // Señales de Memoria Principal
   wire              mem_ready, mem_done;
   wire [DATA_W-1:0] mem_rdata;
@@ -48,21 +44,20 @@ module memory_system_top
   reg               c_we_data;
   reg               c_we_tag;
   reg [DATA_W-1:0]  c_wdata_mux; // MUX para dato de entrada a caché
-  reg [2:0]         c_word_mux;  // MUX para seleccionar palabra (CPU vs Refill)
+  reg [2:0]         c_word_mux;  // MUX para seleccionar palabra 
 
-  // ----------------------------------------------------
-  // 3. Comparador (El rombo en el diagrama)
-  // ----------------------------------------------------
+
+  // 3. Comparador 
+
   // Hit = Tags iguales AND Bit Válido es 1
   wire hit_signal = (tag_cpu == tag_stored) && valid_stored;
 
-  // ----------------------------------------------------
-  // 4. Instanciación Cache Storage
-  // ----------------------------------------------------
+
+  // 4.Cache
   cache cache_mem (
     .clk(clk), .rst(rst),
     .index(index_cpu),       // Siempre usamos el índice de la CPU
-    .word_sel(c_word_mux),   // Seleccionado por FSM (acceso normal o refill)
+    .word_sel(c_word_mux),
     .we_data(c_we_data),
     .we_tag(c_we_tag),
     .tag_in(tag_cpu),
@@ -72,9 +67,8 @@ module memory_system_top
     .data_out(cache_rdata)
   );
 
-  // ----------------------------------------------------
-  // 5. Instanciación Main Memory
-  // ----------------------------------------------------
+
+  // 5. Main Memory
   main_memory main_mem (
     .clk(clk), .rst(rst),
     .req(mem_req_reg),
@@ -86,12 +80,12 @@ module memory_system_top
     .rdata(mem_rdata)
   );
 
-  // ----------------------------------------------------
-  // 6. Máquina de Estados (Control Logic)
-  // ----------------------------------------------------
+
+  // 6. Máquina de Estados 
+
   localparam [2:0] S_IDLE=0, S_LOOKUP=1, S_REF_ISSUE=2, S_REF_WAIT=3, S_WR_HIT=4, S_WR_BYP=5;
   reg [2:0] state, nxt_state;
-  reg [2:0] ref_cnt, nxt_ref_cnt; // Contador para refill de bloque
+  reg [2:0] ref_cnt, nxt_ref_cnt; // Contador
 
   always @(posedge clk or posedge rst) begin
     if (rst) begin
@@ -111,7 +105,7 @@ module memory_system_top
     
     cpu_ready   = 0;
     cpu_hit     = 0;
-    cpu_rdata   = cache_rdata; // Por defecto sacamos dato de caché
+    cpu_rdata   = cache_rdata;
 
     // Control de Memoria
     mem_req_reg   = 0;
@@ -122,8 +116,8 @@ module memory_system_top
     // Control de Caché
     c_we_data   = 0;
     c_we_tag    = 0;
-    c_wdata_mux = cpu_wdata; // Por defecto dato de CPU
-    c_word_mux  = word_cpu;  // Por defecto palabra solicitada por CPU
+    c_wdata_mux = cpu_wdata; 
+    c_word_mux  = word_cpu; 
 
     case (state)
       S_IDLE: begin
@@ -131,9 +125,9 @@ module memory_system_top
       end
 
       S_LOOKUP: begin
-        if (!cpu_we) begin // --- LECTURA ---
+        if (!cpu_we) begin
           if (hit_signal) begin
-            // HIT: Dato ya está en cache_rdata gracias a word_cpu
+            // HIT: Dato ya está en cache
             cpu_ready = 1;
             cpu_hit   = 1;
             nxt_state = S_IDLE;
@@ -150,7 +144,7 @@ module memory_system_top
                nxt_state    = S_REF_WAIT;
             end
           end
-        end else begin    // --- ESCRITURA ---
+        end else begin    //ESCRITURA
           // Write-Through: Siempre mandamos a memoria
           mem_req_reg   = 1;
           mem_we_reg    = 1;
@@ -182,7 +176,6 @@ module memory_system_top
       end
 
       S_REF_ISSUE: begin
-         // Estamos trayendo palabras de memoria (Diagrama: linea "Main Memory" -> Data)
          if (mem_done) begin
             // Guardar dato recibido en caché
             c_we_data   = 1;
@@ -192,16 +185,11 @@ module memory_system_top
             if (ref_cnt == 7) begin // Fin del bloque (8 palabras)
                 // Actualizar Tag y Valid
                 c_we_tag    = 1;
-                
-                // Responder a la CPU (reintentar lectura interna en sig ciclo o responder aqui)
-                // Para simplificar, respondemos aquí con el dato que la CPU quería:
+        
                 cpu_ready = 1;
                 cpu_hit   = 0; // Fue miss
-                // Truco: Si el contador coincide con la palabra que quería la CPU, el bus
-                // cache_rdata aun no tiene el dato nuevo hasta el sig flanco. 
-                // Pero podemos pasarlo directo:
+                
                 if (word_cpu == 3'd7) cpu_rdata = mem_rdata;
-                // Nota: Si word_cpu < 7, el dato ya se guardó en ciclos anteriores y está en cache_rdata
                 
                 nxt_state = S_IDLE;
             end else begin
@@ -217,7 +205,6 @@ module memory_system_top
                 end
             end
          end else begin
-             // Mantener solicitud si mem_ready (handshake simple)
              if (mem_ready) begin
                  mem_req_reg  = 1;
                  mem_we_reg   = 0;
