@@ -40,14 +40,15 @@ El módulo main_memory modela el comportamiento de una Memoria de Acceso Aleator
 ## Waveform sistema completo
 ![display](Fotos/Waveform%20memoria.png)
 
-## Consola
+El módulo memory_system_top actúa como el controlador central de la jerarquía de memoria, genera la interacción entre el Decodificador de Direcciones (address), el Almacenamiento de Caché (cache) y la Memoria Principal (main_memory). Su lógica principal reside en una Máquina de Estados Finita (FSM) que implementa el protocolo de caché, manejando los estados IDLE, LOOKUP, REF_ISSUE (para rellenos/misses), y WR_HIT/WR_BYP (para escrituras). Esta FSM determina si una solicitud de la CPU es un Cache Hit (etiqueta y bit de validez coinciden) o un Cache Miss, controlando de manera precisa cuándo se solicitan bloques a la memoria principal y aplicando una política de Write-Through / No-Allocate (las escrituras siempre van a la memoria principal, y solo se actualiza la caché si hay un hit). Las señales de salida cpu_ready, cpu_hit y cpu_rdata gestionan la interfaz.
 
+
+## Consola
 ![display](Fotos/Consola%201.png)
 
 
 ## Codigos de consola
 
-### Cpu multiciclo
 ```
 vcs -kdb -sverilog -lca -Mupdate -debug_all +vcs+flush+all +warn=all -timescale=1ns/10ps -full64 \
 -P ${VERDI_HOME}/share/PLI/VCS/linux64/novas.tab ${VERDI_HOME}/share/PLI/VCS/linux64/pli.a \
