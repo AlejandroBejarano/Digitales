@@ -11,7 +11,6 @@ module tb_main_memory;
     wire ready, done;
     wire [DATA_W-1:0] rdata;
 
-    // Instancia del DUT
     main_memory #(
         .ADDR_W(ADDR_W),
         .DATA_W(DATA_W),

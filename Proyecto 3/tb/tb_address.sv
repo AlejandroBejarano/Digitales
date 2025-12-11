@@ -1,4 +1,3 @@
-// Testbench para addr_decoder
 `timescale 1ns/1ps
 
 module tb_address;
@@ -13,7 +12,6 @@ module tb_address;
     wire [INDEX_W-1:0] index;
     wire [2:0]        word_sel;
 
-    // Instancia del módulo bajo prueba
     address #(
         .ADDR_W(ADDR_W),
         .INDEX_W(INDEX_W),

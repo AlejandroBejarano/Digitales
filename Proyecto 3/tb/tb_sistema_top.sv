@@ -1,4 +1,3 @@
-// Testbench para memory_system_top (Versión Corregida y Focalizada)
 `timescale 1ns/1ps
 
 module tb_jerarquia_simple;
@@ -15,7 +14,6 @@ module tb_jerarquia_simple;
     wire cpu_ready, cpu_hit;
     wire [DATA_W-1:0] cpu_rdata;
 
-    // Instancia del DUT (Device Under Test)
     memory_system_top #(
         .ADDR_W(ADDR_W),
         .DATA_W(DATA_W)
@@ -34,7 +32,6 @@ module tb_jerarquia_simple;
     // Reloj
     always #(CLK_PERIOD/2) clk = ~clk;
 
-    // Tareas para simplificar el testbench
     task reset_cpu;
         begin
             cpu_req = 0;
@@ -44,15 +41,13 @@ module tb_jerarquia_simple;
         end
     endtask
     
-    // TAREA CORREGIDA: Se añade 'endtask'
     task wait_cycles;
         input integer cycles;
         begin
             repeat (cycles) @(posedge clk);
         end
-    endtask // <<-- ¡AQUÍ ESTÁ LA CORRECCIÓN!
+    endtask
     
-    // TAREA CORREGIDA: Se añade 'endtask'
     task request_cpu;
         input [ADDR_W-1:0] addr;
         input [DATA_W-1:0] wdata;
@@ -66,18 +61,18 @@ module tb_jerarquia_simple;
             cpu_we = we;
             cpu_req = 1;
             
-            @(posedge clk); // 1. Ciclo de look-up
+            @(posedge clk);
             cpu_req = 0;
             
             // 2. Esperar respuesta (Hit es rápido, Miss/Write es lento)
             wait(cpu_ready);
-            @(posedge clk); // Esperar un ciclo adicional para estabilización
+            @(posedge clk); 
 
             rdata = cpu_rdata;
             hit = cpu_hit;
             $display("T=%0t | Respuesta: Ready=%b, Hit=%b, Data=0x%h", $time, cpu_ready, cpu_hit, cpu_rdata);
         end
-    endtask // <<-- ¡AQUÍ ESTÁ LA CORRECCIÓN!
+    endtask
 
     // Secuencia de Pruebas
     initial begin
